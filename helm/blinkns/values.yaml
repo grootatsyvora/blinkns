@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: grootatsyvora/blinkns
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+leaderElection: false
+
+operatorNamespace: blinkns-system
+
+notifications:
+  webhookType: slack
+  webhookUrl: ""
+
+# List of namespaces to create. Each entry becomes a BlinkNS CR.
+namespaces: []
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 128Mi
+  requests:
+    cpu: 50m
+    memory: 64Mi

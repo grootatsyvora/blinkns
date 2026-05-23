@@ -1,0 +1,52 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: mutating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /mutate-blinkns-demo-io-v1alpha1-blinkns
+  failurePolicy: Fail
+  name: mblinkns-v1alpha1.kb.io
+  rules:
+  - apiGroups:
+    - blinkns.demo.io
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - blinkns
+  sideEffects: None
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: validating-webhook-configuration
+webhooks:
+- admissionReviewVersions:
+  - v1
+  clientConfig:
+    service:
+      name: webhook-service
+      namespace: system
+      path: /validate-blinkns-demo-io-v1alpha1-blinkns
+  failurePolicy: Fail
+  name: vblinkns-v1alpha1.kb.io
+  rules:
+  - apiGroups:
+    - blinkns.demo.io
+    apiVersions:
+    - v1alpha1
+    operations:
+    - CREATE
+    - UPDATE
+    resources:
+    - blinkns
+  sideEffects: None

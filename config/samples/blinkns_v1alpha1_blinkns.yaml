@@ -1,0 +1,9 @@
+apiVersion: blinkns.demo.io/v1alpha1
+kind: BlinkNS
+metadata:
+  labels:
+    app.kubernetes.io/name: blinkns-operator
+    app.kubernetes.io/managed-by: kustomize
+  name: blinkns-sample
+spec:
+  # TODO(user): Add fields here

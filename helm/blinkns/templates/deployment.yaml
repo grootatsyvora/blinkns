@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "blinkns.name" . }}
+  namespace: {{ .Values.operatorNamespace }}
+  labels:
+    {{- include "blinkns.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "blinkns.name" . }}
+  template:
+    metadata:
+      labels:
+        {{- include "blinkns.labels" . | nindent 8 }}
+    spec:
+      serviceAccountName: {{ include "blinkns.name" . }}
+      containers:
+        - name: manager
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args:
+            - --health-probe-bind-address=:8081
+            - --metrics-bind-address=0
+            {{- if .Values.leaderElection }}
+            - --leader-elect
+            {{- end }}
+          env:
+            - name: OPERATOR_NAMESPACE
+              value: {{ .Values.operatorNamespace }}
+          ports:
+            - name: webhook
+              containerPort: 9443
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8081
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /readyz
+              port: 8081
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: webhook-certs
+              mountPath: /tmp/k8s-webhook-server/serving-certs
+              readOnly: true
+      volumes:
+        - name: webhook-certs
+          secret:
+            secretName: {{ include "blinkns.name" . }}-webhook-cert

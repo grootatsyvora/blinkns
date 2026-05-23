@@ -1,0 +1,63 @@
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: MutatingWebhookConfiguration
+metadata:
+  name: {{ include "blinkns.name" . }}-mutating
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Values.operatorNamespace }}/{{ include "blinkns.name" . }}-webhook-cert
+  labels:
+    {{- include "blinkns.labels" . | nindent 4 }}
+webhooks:
+  - name: mblinkns-v1alpha1.kb.io
+    admissionReviewVersions: ["v1"]
+    clientConfig:
+      service:
+        name: {{ include "blinkns.name" . }}
+        namespace: {{ .Values.operatorNamespace }}
+        path: /mutate-blinkns-demo-io-v1alpha1-blinkns
+    rules:
+      - apiGroups: ["blinkns.demo.io"]
+        apiVersions: ["v1alpha1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["blinknses"]
+    sideEffects: None
+    failurePolicy: Fail
+---
+apiVersion: admissionregistration.k8s.io/v1
+kind: ValidatingWebhookConfiguration
+metadata:
+  name: {{ include "blinkns.name" . }}-validating
+  annotations:
+    cert-manager.io/inject-ca-from: {{ .Values.operatorNamespace }}/{{ include "blinkns.name" . }}-webhook-cert
+  labels:
+    {{- include "blinkns.labels" . | nindent 4 }}
+webhooks:
+  - name: vblinkns-v1alpha1.kb.io
+    admissionReviewVersions: ["v1"]
+    clientConfig:
+      service:
+        name: {{ include "blinkns.name" . }}
+        namespace: {{ .Values.operatorNamespace }}
+        path: /validate-blinkns-demo-io-v1alpha1-blinkns
+    rules:
+      - apiGroups: ["blinkns.demo.io"]
+        apiVersions: ["v1alpha1"]
+        operations: ["CREATE", "UPDATE"]
+        resources: ["blinknses"]
+    sideEffects: None
+    failurePolicy: Fail
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "blinkns.name" . }}
+  namespace: {{ .Values.operatorNamespace }}
+  labels:
+    {{- include "blinkns.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/name: {{ include "blinkns.name" . }}
+  ports:
+    - name: webhook
+      port: 443
+      targetPort: 9443

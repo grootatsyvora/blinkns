@@ -1,0 +1,18 @@
+{{- range .Values.namespaces }}
+---
+apiVersion: blinkns.demo.io/v1alpha1
+kind: BlinkNS
+metadata:
+  name: {{ .name }}
+spec:
+  ttl: {{ .ttl | quote }}
+  {{- if .labels }}
+  labels:
+    {{- toYaml .labels | nindent 4 }}
+  {{- end }}
+  {{- if $.Values.notifications.webhookUrl }}
+  notifications:
+    webhookType: {{ $.Values.notifications.webhookType }}
+    webhookSecretRef: blinkns-notification-webhook
+  {{- end }}
+{{- end }}

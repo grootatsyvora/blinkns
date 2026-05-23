@@ -1,0 +1,14 @@
+apiVersion: v2
+name: blinkns
+description: BlinkNS — Kubernetes operator for ephemeral namespaces with TTLs
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+keywords:
+  - operator
+  - namespace
+  - ttl
+  - ephemeral
+maintainers:
+  - name: Deependra Parmar
+    url: https://github.com/grootatwork

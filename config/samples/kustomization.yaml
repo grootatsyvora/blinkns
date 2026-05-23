@@ -1,0 +1,4 @@
+## Append samples of your project ##
+resources:
+- blinkns_v1alpha1_blinkns.yaml
+# +kubebuilder:scaffold:manifestskustomizesamples

@@ -1,0 +1,22 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Issuer
+metadata:
+  name: {{ include "blinkns.name" . }}-selfsigned
+  namespace: {{ .Values.operatorNamespace }}
+spec:
+  selfSigned: {}
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: {{ include "blinkns.name" . }}-webhook-cert
+  namespace: {{ .Values.operatorNamespace }}
+spec:
+  secretName: {{ include "blinkns.name" . }}-webhook-cert
+  dnsNames:
+    - {{ include "blinkns.name" . }}.{{ .Values.operatorNamespace }}.svc
+    - {{ include "blinkns.name" . }}.{{ .Values.operatorNamespace }}.svc.cluster.local
+  issuerRef:
+    name: {{ include "blinkns.name" . }}-selfsigned
+    kind: Issuer
