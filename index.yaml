@@ -1,0 +1,22 @@
+apiVersion: v1
+entries:
+  blinkns:
+  - apiVersion: v2
+    appVersion: 0.1.0
+    created: "2026-05-23T08:23:06.660239377Z"
+    description: BlinkNS — Kubernetes operator for ephemeral namespaces with TTLs
+    digest: f4f7b989bd48ac8452285ee10241fd51e64cef4d820e1a1ded104867baba367a
+    keywords:
+    - operator
+    - namespace
+    - ttl
+    - ephemeral
+    maintainers:
+    - name: Deependra Parmar
+      url: https://github.com/grootatwork
+    name: blinkns
+    type: application
+    urls:
+    - https://github.com/grootatsyvora/blinkns/releases/download/blinkns-0.1.0/blinkns-0.1.0.tgz
+    version: 0.1.0
+generated: "2026-05-23T08:23:06.66024843Z"
